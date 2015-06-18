@@ -20,7 +20,7 @@ getAuth = function() {
   #   Client token from Google authentication server.
   #   Dataframe with the credential information which is cached in working space 
   #   and optionally saved as RData file in current working directory.
-  
+
   if(!exists('credentials')){
     cat('Authentication process needs your Client ID from the Adwords API project for native apps.')
     c.id <- readline(as.character(cat("\n\nPaste the Client ID here",
@@ -38,17 +38,17 @@ getAuth = function() {
                                                                    ":=>")))
     }
   }
-  
+
   if(exists('credentials')){
     url <- paste('https://accounts.google.com/o/oauth2/auth?',
                  'client_id=', credentials$c.id, '&',
                  'response_type=code&',
                  'scope=https%3A%2F%2Fadwords.google.com%2Fapi%2Fadwords%2F&', #changed to adwords
-                 'redirect_uri=urn:ietf:wg:oauth:2.0:oob&',
+                 'redirect_uri=https%3A%2F%2Flocalhost%2Foauth_callback&',
                  'access_type=offline&',
                  'approval_prompt=force', sep='', collapse='')
     cert <- system.file("CurlSSL", "ca-bundle.crt", package = "RCurl")#SSL Certificate Fix for Windows
-    RCurl::getURL(url, cainfo=cert, ssl.verifypeer = TRUE) # Explicitly setting certificate verification for an error in OS X
+    RCurl::getURL(url, cainfo=cert, ssl.verifypeer = TRUE)
     browseURL(url)
     # Manual next-step: input code-parameter to c.token variable and run loadToken()
     cat('Authentication process needs your Client token in order to receive the access token from the API. Copy the Client token from your webbrowser and paste it here.')
